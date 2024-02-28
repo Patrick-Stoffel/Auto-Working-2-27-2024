@@ -8,16 +8,15 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.EncoderConstants;
 import frc.robot.subsystems.ArmSubsystem;
 
-public class MoveArmToMaxPOSCMD extends Command {
+public class MoveArmToBackPodium extends Command {
   /** Creates a new MoveArmToPodShotCMD. */
   private final ArmSubsystem armSubsystem;
   private double armVolts;
-  
 
-  public MoveArmToMaxPOSCMD(ArmSubsystem armSubsystem, double armVolts) {
+  public MoveArmToBackPodium(ArmSubsystem armSubsystem, double armVolts) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.armSubsystem = armSubsystem;
-    
+
     this.armVolts = armVolts;
 
     addRequirements(armSubsystem);
@@ -45,9 +44,10 @@ public class MoveArmToMaxPOSCMD extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (armSubsystem.getArmEncoderPOS() <= EncoderConstants.ek_MaxRangeShotArmPOS) {
+    if (armSubsystem.getArmEncoderPOS() <= EncoderConstants.ek_BackPodiumShotArmPOS) {
       return true;
+    } else {
+      return false;
     }
-    else{return false;}
   }
 }

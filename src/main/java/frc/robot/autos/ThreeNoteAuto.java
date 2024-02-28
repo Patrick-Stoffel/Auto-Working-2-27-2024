@@ -1,4 +1,4 @@
-/*package frc.robot.autos;
+package frc.robot.autos;
 
 import frc.robot.Constants;
 import frc.robot.VoltageConstants;
@@ -28,53 +28,46 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 public class ThreeNoteAuto extends SequentialCommandGroup {
-    public ThreeNoteAuto(Swerve s_Swerve, ShooterSubsystem shooterSubsystem, KickerSubsystem kickerSubsystem, ArmSubsystem armSubsystem, IntakeAndKickerSubsystem intakeAndKickerSubsystem){
-        TrajectoryConfig config =
-            new TrajectoryConfig(
-                    Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-                    Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+    public ThreeNoteAuto(Swerve s_Swerve, ShooterSubsystem shooterSubsystem, KickerSubsystem kickerSubsystem,
+            ArmSubsystem armSubsystem, IntakeAndKickerSubsystem intakeAndKickerSubsystem) {
+        TrajectoryConfig config = new TrajectoryConfig(
+                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
                 .setKinematics(Constants.Swerve.swerveKinematics);
 
-        // An example trajectory to follow.  All units in meters.
-        Trajectory exampleTrajectory =
-            TrajectoryGenerator.generateTrajectory(
+        // An example trajectory to follow. All units in meters.
+        Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
                 new Pose2d(0, 0, new Rotation2d(0)),
                 // Pass through these two interior waypoints, making an 's' curve path
-                List.of(new Translation2d(-0.75, 0), new Translation2d(0, 0)),
+                List.of(new Translation2d(-1.0, -.5), new Translation2d(-2.0, 0)),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(-1.5, 0, new Rotation2d(0)),
+                new Pose2d(-3.0, 0, new Rotation2d(0)),
                 config);
 
-        Trajectory secondTrajectory =
-            TrajectoryGenerator.generateTrajectory(
+        Trajectory secondTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(0, 0, new Rotation2d(1.570796)),
+                new Pose2d(-3.0, -.5, new Rotation2d(1.570796)),
                 // Pass through these two interior waypoints, making an 's' curve path
-                List.of(new Translation2d(0, 0), new Translation2d(0, 0)),
+                List.of(new Translation2d(.5, 0), new Translation2d(0, 0)),
                 // End 3 meters straight ahead of where we started, facing forward
-                new Pose2d(1, 0, new Rotation2d(0)),// 1.570796 radian = 90 degrees
+                new Pose2d(1, 0, new Rotation2d(0)), // 1.570796 radian = 90 degrees
                 config);
 
-        Trajectory thirdTrajectory =
-             TrajectoryGenerator.generateTrajectory(
+        Trajectory thirdTrajectory = TrajectoryGenerator.generateTrajectory(
                 // Start at the origin facing the +X direction
-                new Pose2d(0, 0, new Rotation2d(0)),
+                new Pose2d(1, 0, new Rotation2d(1.570796)),
                 // Pass through these two interior waypoints, making an 's' curve path
                 List.of(new Translation2d(0, 0), new Translation2d(0, 0)),
                 // End 3 meters straight ahead of where we started, facing forward
                 new Pose2d(0, 0, new Rotation2d(0.7853982)),
                 config);
-                
 
-
-        var thetaController =
-            new ProfiledPIDController(
+        var thetaController = new ProfiledPIDController(
                 Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        SwerveControllerCommand swerveControllerCommand =
-            new SwerveControllerCommand(
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
                 exampleTrajectory,
                 s_Swerve::getPose,
                 Constants.Swerve.swerveKinematics,
@@ -84,8 +77,7 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
                 s_Swerve::setModuleStates,
                 s_Swerve);
 
-         SwerveControllerCommand swerveControllerCommandTwo =
-            new SwerveControllerCommand(
+        SwerveControllerCommand swerveControllerCommandTwo = new SwerveControllerCommand(
                 secondTrajectory,
                 s_Swerve::getPose,
                 Constants.Swerve.swerveKinematics,
@@ -95,8 +87,7 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
                 s_Swerve::setModuleStates,
                 s_Swerve);
 
-             SwerveControllerCommand swerveControllerCommandThree  =
-            new SwerveControllerCommand(
+        SwerveControllerCommand swerveControllerCommandThree = new SwerveControllerCommand(
                 thirdTrajectory,
                 s_Swerve::getPose,
                 Constants.Swerve.swerveKinematics,
@@ -106,28 +97,23 @@ public class ThreeNoteAuto extends SequentialCommandGroup {
                 s_Swerve::setModuleStates,
                 s_Swerve);
 
-
         addCommands(
-            new shootFromSubSCG(armSubsystem, shooterSubsystem, kickerSubsystem),//
-            new ParallelCommandGroup(//
+                new shootFromSubSCG(shooterSubsystem, armSubsystem, kickerSubsystem), //
+
                 new InstantCommand(() -> s_Swerve.setPose(exampleTrajectory.getInitialPose())),
-                swerveControllerCommand,//
-                new IntakeAndKickerCMD(intakeAndKickerSubsystem, VoltageConstants.vk_KickerForward, VoltageConstants.vk_IntakeForward)//
-            ),//
-            new shootFromPodiumSCG(armSubsystem, shooterSubsystem, kickerSubsystem),//
-          
-            new ParallelCommandGroup(
+                swerveControllerCommand.alongWith(new IntakeAndKickerCMD(intakeAndKickerSubsystem,
+                        VoltageConstants.vk_KickerForward, VoltageConstants.vk_IntakeForward, kickerSubsystem)), //
+
+                new shootFromPodiumSCG(armSubsystem, shooterSubsystem, kickerSubsystem), //
+
                 new InstantCommand(() -> s_Swerve.setPose(secondTrajectory.getInitialPose())),
-                swerveControllerCommandTwo,//
-                new IntakeAndKickerCMD(intakeAndKickerSubsystem, VoltageConstants.vk_KickerForward, VoltageConstants.vk_IntakeForward)//
-            ),//
-            new InstantCommand(() -> s_Swerve.setPose(thirdTrajectory.getInitialPose())),
-            swerveControllerCommandThree,//
-            new shootFromPodiumSCG(armSubsystem, shooterSubsystem, kickerSubsystem)//
+                swerveControllerCommandTwo.alongWith(new IntakeAndKickerCMD(intakeAndKickerSubsystem,
+                        VoltageConstants.vk_KickerForward, VoltageConstants.vk_IntakeForward, kickerSubsystem)), //
 
-            
+                new InstantCommand(() -> s_Swerve.setPose(thirdTrajectory.getInitialPose())),
+                swerveControllerCommandThree, //
+                new shootFromPodiumSCG(armSubsystem, shooterSubsystem, kickerSubsystem)//
 
-            
         );
     }
-}*/
+}

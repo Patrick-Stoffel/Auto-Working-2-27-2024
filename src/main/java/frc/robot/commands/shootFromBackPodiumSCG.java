@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.VoltageConstants;
@@ -15,16 +14,19 @@ import frc.robot.subsystems.ShooterSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class shootMaxRangeSCG extends SequentialCommandGroup {
-  // Creates a new shootMaxRangeSCG. 
-  public shootMaxRangeSCG(ArmSubsystem armSubsystem, ShooterSubsystem shooterSubsystem, KickerSubsystem kickerSubsystem) {
+public class shootFromBackPodiumSCG extends SequentialCommandGroup {
+  // Creates a new shootMaxRangeSCG.
+  public shootFromBackPodiumSCG(ArmSubsystem armSubsystem, ShooterSubsystem shooterSubsystem,
+      KickerSubsystem kickerSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-     new MoveArmToMaxPOSCMD(armSubsystem, VoltageConstants.vk_ArmUp),//
-     new RunShooterTimeBaseCMD(shooterSubsystem, VoltageConstants.vk_TopShooterMax, VoltageConstants.vk_BottomShooterMax),//
-      new MoveArmToHomePOSCMD(armSubsystem, VoltageConstants.vk_ArmDown)//
+        new MoveArmToBackPodium(armSubsystem, VoltageConstants.vk_ArmUp).withTimeout(2), //
+        new RunShooterTimeBaseCMD(shooterSubsystem, VoltageConstants.vk_TopShooterMax,
+            VoltageConstants.vk_BottomShooterMax)
+            .alongWith(new RunKickerTimeBaseCMD(kickerSubsystem, VoltageConstants.vk_KickerForward)).withTimeout(3), //
+        new MoveArmToHomePOSCMD(armSubsystem, VoltageConstants.vk_ArmDown)//
     );
-    
+
   }
 }

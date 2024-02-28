@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.VoltageConstants;
@@ -16,15 +15,17 @@ import frc.robot.subsystems.ShooterSubsystem;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class shootCustomSCG extends SequentialCommandGroup {
-  // Creates a new shootCustom. 
+  // Creates a new shootCustom.
   public shootCustomSCG(ArmSubsystem armSubsystem, ShooterSubsystem shooterSubsystem, KickerSubsystem kickerSubsystem) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      
-     new MoveArmToCustomPOSCMD(armSubsystem, VoltageConstants.vk_ArmUp).withTimeout(1),//
-     new RunShooterTimeBaseCMD(shooterSubsystem, VoltageConstants.vk_TopShooterForward, VoltageConstants.vk_BottomShooterForward).alongWith(new RunKickerTimeBaseCMD(kickerSubsystem, VoltageConstants.vk_KickerForward)),//
-      new MoveArmToHomePOSCMD(armSubsystem, VoltageConstants.vk_ArmDown)//
+
+        new MoveArmToCustomPOSCMD(armSubsystem, VoltageConstants.vk_ArmUp).withTimeout(2), //
+        new RunShooterTimeBaseCMD(shooterSubsystem, VoltageConstants.vk_TopShooterForward,
+            VoltageConstants.vk_BottomShooterForward)
+            .alongWith(new RunKickerTimeBaseCMD(kickerSubsystem, VoltageConstants.vk_KickerForward)).withTimeout(3), //
+        new MoveArmToHomePOSCMD(armSubsystem, VoltageConstants.vk_ArmDown)//
     );
   }
 }

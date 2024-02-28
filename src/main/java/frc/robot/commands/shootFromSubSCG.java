@@ -18,25 +18,24 @@ import frc.robot.subsystems.ShooterSubsystem;
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class shootFromSubSCG extends SequentialCommandGroup {
-  // Creates a new shootFromSubSCG. 
+  // Creates a new shootFromSubSCG.
   public shootFromSubSCG(ShooterSubsystem shooterSubsystem, ArmSubsystem armSubsystem, KickerSubsystem kickerSubsystem)
-    
-   {
+
+  {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-        
-        new MoveArmToSubShotCMD(armSubsystem, VoltageConstants.vk_ArmUp).withTimeout(1),//
-        new RunShooterTimeBaseCMD(shooterSubsystem, VoltageConstants.vk_TopShooterForward, VoltageConstants.vk_BottomShooterForward).alongWith(new RunKickerTimeBaseCMD(kickerSubsystem, VoltageConstants.vk_KickerForward)).withTimeout(5),//
-       
-       //new RunShooterCMD(shooterSubsystem, 0, 0).withTimeout(.5),//
-       //new RunKickerCMD(kickerSubsystem, 0).withTimeout(.5),//
-       new MoveArmToHomePOSCMD(armSubsystem, VoltageConstants.vk_ArmDown)//
 
-    
-      
-      
-       );
-    
+        new MoveArmToSubShotCMD(armSubsystem, VoltageConstants.vk_ArmUp).withTimeout(2), //
+        new RunShooterTimeBaseCMD(shooterSubsystem, VoltageConstants.vk_TopShooterForward,
+            VoltageConstants.vk_BottomShooterForward)
+            .alongWith(new RunKickerTimeBaseCMD(kickerSubsystem, VoltageConstants.vk_KickerForward)).withTimeout(3), //
+
+        // new RunShooterCMD(shooterSubsystem, 0, 0).withTimeout(.5),//
+        // new RunKickerCMD(kickerSubsystem, 0).withTimeout(.5),//
+        new MoveArmToHomePOSCMD(armSubsystem, VoltageConstants.vk_ArmDown)//
+
+    );
+
   }
 }

@@ -10,15 +10,15 @@ import frc.robot.subsystems.KickerSubsystem;
 
 public class RunKickerTimeBaseCMD extends Command {
   /** Creates a new RunKickerTimeBaseCMD. */
-   private final KickerSubsystem kickerSubsystem;
+  private final KickerSubsystem kickerSubsystem;
   private double kickerVolts;
   private double startTime;
   private double currentTime;
-  
+
   public RunKickerTimeBaseCMD(KickerSubsystem kickerSubsystem, double kickerVolts) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.kickerSubsystem = kickerSubsystem;
-    
+
     this.kickerVolts = kickerVolts;
 
     addRequirements(kickerSubsystem);
@@ -35,9 +35,9 @@ public class RunKickerTimeBaseCMD extends Command {
   @Override
   public void execute() {
     currentTime = Timer.getFPGATimestamp();
-    if (currentTime - startTime > 1.5 ){
-    
-    kickerSubsystem.setKickerSpeed(kickerVolts);
+    if (currentTime - startTime > 1) {
+
+      kickerSubsystem.setKickerSpeed(kickerVolts);
     }
   }
 
