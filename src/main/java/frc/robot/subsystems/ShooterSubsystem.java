@@ -21,6 +21,7 @@ public class ShooterSubsystem extends SubsystemBase {
   private static RelativeEncoder topEncoder;
   private static CANSparkMax bottomShooterMotor;
   private static RelativeEncoder bottomEncoder;
+
   public ShooterSubsystem() {
     topShooterMotor = new CANSparkMax(21, MotorType.kBrushless);
 

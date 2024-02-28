@@ -4,8 +4,6 @@
 
 package frc.robot.subsystems;
 
-import org.opencv.features2d.FlannBasedMatcher;
-
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkBase.IdleMode;
